@@ -49,22 +49,20 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Blog",
+        "groups": [
+          {
+            "group": "Latest Posts",
+            "pages": [
+              "blog/index",
+              "blog/launching-wcp"
+            ]
+          }
+        ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/webcontextprotocol",
-          "icon": "github"
-        },
-        {
-          "anchor": "Registry",
-          "href": "https://registry.wcp.dev",
-          "icon": "database"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
