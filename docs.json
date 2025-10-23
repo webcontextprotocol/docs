@@ -26,6 +26,12 @@
               "quickstart",
               "why-wcp"
             ]
+          },
+          {
+            "group": "AI Tools",
+            "pages": [
+              "ai-tools/cursor-wcp-cursorrules"
+            ]
           }
         ]
       },
