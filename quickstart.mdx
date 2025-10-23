@@ -3,215 +3,375 @@ title: "Quickstart"
 description: "Add WCP to your site in 5 minutes"
 ---
 
-## Get Started in 3 Steps
+## Get Started in Cursor
 
 Transform your site from guesswork to clarity for AI agents.
 
 <Steps>
-  <Step title="Identify Key Actions">
-    Find the primary user actions on your most important pages:
-    - Add to cart / Buy now
-    - Submit forms
-    - Search queries
-    - Primary navigation
+  <Step title="Create `.cursor/rules/wcp-rules.md` file in your project">
+    Create a file in the root of your project named `.cursor/rules/wcp-rules.md` (create the `.cursor/rules` folder if it doesn't exist).
   </Step>
+  <Step title="Copy these rules into the file">
+    ```markdown
+    # Web Context Protocol (WCP) Implementation Rules
+
+    ## Overview
+    When adding HTML elements or modifying existing ones, ALWAYS consider if they need WCP annotations to help AI agents understand their purpose and behavior.
+
+    ## Core Syntax
+    Use the `data-wcp` attribute with semicolon-separated key-value pairs:
+    data-wcp="key:value; key:value"
   
-  <Step title="Add WCP Annotations">
-    Add `data-wcp` attributes to those elements
+
+    ## When to Add WCP
+
+    ### ALWAYS annotate these elements:
+    - **Buttons** - Especially primary actions (submit, checkout, add to cart)
+    - **Forms** - Any form that submits data
+    - **Links** that trigger actions - Navigation, downloads, external sites
+    - **Search inputs** - Search bars and filters
+    - **Primary CTAs** - Main call-to-action on each page/section
+
+    ### CONSIDER annotating:
+    - **Secondary actions** - Cancel, back, alternative options
+    - **Interactive elements** - Tabs, accordions, modals triggers
+    - **Navigation elements** - Menus, breadcrumbs
+    - **Content regions** - Main sections of the page
+
+    ## Actions Reference
+
+    Use these standard actions (most common first):
+
+    | Action | When to Use | Example |
+    |--------|-------------|---------|
+    | `action:navigate` | Links to new pages | Menu items, product links |
+    | `action:submit` | Form submissions | Contact forms, settings |
+    | `action:add` | Adding items | Add to cart, save to list |
+    | `action:search` | Search operations | Search bars |
+    | `action:purchase` | Payment initiation | Checkout buttons |
+    | `action:filter` | Filtering content | Category filters, sort |
+    | `action:remove` | Removing items | Delete from cart |
+    | `action:auth` | Authentication | Login, signup, logout |
+
+    For domain-specific actions, use: `action:custom.your-action-name`
+
+    ## Effects Reference
+
+    Specify what happens when the element is interacted with:
+
+    | Effect | When to Use | Example |
+    |--------|-------------|---------|
+    | `effect:async` | Updates page without reload | Add to cart, live search |
+    | `effect:navigate` | Full page navigation | Links, form submissions |
+    | `effect:modal` | Opens overlay/dialog | Details, confirmations |
+    | `effect:download` | Triggers file download | PDF downloads, exports |
+    | `effect:external` | Leaves current site | External links |
+
+    ## Regions Reference
+
+    Group related elements in semantic regions:
+
+    | Region | When to Use |
+    |--------|-------------|
+    | `region:navigation` | Site navigation, menus |
+    | `region:content` | Main page content |
+    | `region:product` | Product details (e-commerce) |
+    | `region:checkout` | Checkout flow |
+    | `region:search` | Search interface |
+    | `region:results` | Search/filter results |
+
+    ## Modifiers
+
+    ### Primary Actions
+    Mark the MOST IMPORTANT action in each section:
+    primary:true
+  
+
+    ### Update Targets
+    Specify where async updates appear:
+    target:#element-id
+
+
+    ## Implementation Patterns
+
+    ### E-Commerce Product Page
+    <!-- Product section -->
+    <div data-wcp="region:product">
+      <!-- Primary action -->
+      <button data-wcp="action:add; effect:async; target:#cart; primary:true">
+        Add to Cart
+      </button>
+      
+      <!-- Secondary action -->
+      <button data-wcp="action:purchase; effect:navigate">
+        Buy Now
+      </button>
+    </div>
+
+    <!-- Cart widget that gets updated -->
+    <div id="cart" data-wcp="region:checkout">
+      <button data-wcp="action:purchase; effect:navigate; primary:true">
+        Checkout
+      </button>
+    </div>
+
+
+    ### Search Interface
+    <form data-wcp="region:search; action:search; effect:async; target:#results">
+      <input type="search" name="q" />
+      <button type="submit" data-wcp="action:search; effect:async; primary:true">
+        Search
+      </button>
+    </form>
+
+    <div id="results" data-wcp="region:results">
+      <!-- Search results -->
+    </div>
+  
+
+    ### Settings Form
+    <form data-wcp="action:submit; effect:async; target:#notification">
+      <!-- Form fields -->
+      
+      <button type="submit" data-wcp="action:submit; effect:async; primary:true">
+        Save Changes
+      </button>
+      
+      <button type="button" data-wcp="action:navigate; effect:navigate">
+        Cancel
+      </button>
+    </form>
+
+    <div id="notification"></div>
+  
+
+    ### Navigation Menu
+    <nav data-wcp="region:navigation">
+      <a href="/" data-wcp="action:navigate; effect:navigate">Home</a>
+      <a href="/products" data-wcp="action:navigate; effect:navigate">Products</a>
+      <a href="/about" data-wcp="action:navigate; effect:navigate">About</a>
+    </nav>
+
+
+    ### Modal Trigger
+    <button data-wcp="action:navigate; effect:modal">
+      View Details
+    </button>
+  
+
+    ### External Link
+    <a href="https://external-site.com" 
+       data-wcp="action:navigate; effect:external">
+      Learn More
+    </a>
+
+
+    ### Download Button
+    <button data-wcp="action:custom.export; effect:download">
+      Download Report
+    </button>
+  
+
+    ## Best Practices
+
+    ### DO:
+    - ✅ Always add WCP to primary CTAs first
+    - ✅ Mark exactly ONE `primary:true` per region/section
+    - ✅ Specify the effect type (async, navigate, modal)
+    - ✅ Add `target:` for async operations that update specific elements
+    - ✅ Use regions to group related functionality
+    - ✅ Be consistent across similar elements
+
+    ### DON'T:
+    - ❌ Annotate every single element (focus on actionable items)
+    - ❌ Use WCP as a replacement for semantic HTML
+    - ❌ Mark multiple elements as `primary:true` in the same section
+    - ❌ Forget to specify effects for interactive elements
+    - ❌ Mix up actions and effects
+
+    ## Decision Tree
+
+    When adding/modifying an element, ask:
+
+    1. **Is this interactive?** (button, link, form)
+       - Yes → Continue
+       - No → Skip WCP (unless it's a region container)
+
+    2. **What does it DO?**
+       - Navigate → `action:navigate`
+       - Submit data → `action:submit`
+       - Add item → `action:add`
+       - Search → `action:search`
+       - Custom → `action:custom.name`
+
+    3. **HOW does it behave?**
+       - Updates in place → `effect:async`
+       - Goes to new page → `effect:navigate`
+       - Opens overlay → `effect:modal`
+       - Downloads file → `effect:download`
+       - Leaves site → `effect:external`
+
+    4. **Is this the PRIMARY action here?**
+       - Yes → Add `primary:true`
+       - No → Skip primary modifier
+
+    5. **Does it update something specific?**
+       - Yes → Add `target:#element-id`
+       - No → Skip target
+
   </Step>
-  
-  <Step title="Test with AI Agents">
-    Verify AI agents can now interact reliably with your site
+  <Step title="Start coding - Cursor will auto-apply WCP">
+    Cursor will now automatically suggest WCP annotations when you create or modify interactive elements. Just accept the suggestions or ask: "Add WCP annotations to this component"
   </Step>
 </Steps>
 
-## Example: E-commerce Product Page
+    ## Examples by Page Type
 
-### Before WCP
-
-```html
-<div class="product-card">
-  <button class="btn btn-primary" onclick="addToCart()">
-    Add to Cart
-  </button>
-  <button class="btn btn-secondary" onclick="buyNow()">
-    Buy Now
-  </button>
-</div>
-```
-
-**AI agent sees:** Generic buttons with unclear behavior
-
-### After WCP
-
-```html
-<div class="product-card" data-wcp="region:product">
-  <!-- Primary action: Add to cart without navigation -->
-  <button class="btn btn-primary" 
-          data-wcp="action:add; effect:async; target:#cart; primary:true"
-          onclick="addToCart()">
-    Add to Cart
-  </button>
-  
-  <!-- Secondary action: Navigate to checkout -->
-  <button class="btn btn-secondary"
-          data-wcp="action:purchase; effect:navigate"
-          onclick="buyNow()">
-    Buy Now
-  </button>
-</div>
-```
-
-**AI agent knows:**
-- ✅ First button adds to cart without navigation
-- ✅ Second button navigates to checkout
-- ✅ First button is the primary action
-
-## Common Patterns
-
-<AccordionGroup>
-  <Accordion title="Forms with Async Submit" icon="file-lines">
-    ```html
-    <form data-wcp="action:submit; effect:async; target:#notification">
-      <input type="email" name="email" />
-      <button type="submit" 
-              data-wcp="action:submit; effect:async; primary:true">
-        Save Changes
+    ### Landing Page
+    <section data-wcp="region:content">
+      <button data-wcp="action:auth; effect:navigate; primary:true">
+        Get Started
       </button>
-    </form>
-    ```
-  </Accordion>
-  
-  <Accordion title="Search with Filters" icon="magnifying-glass">
-    ```html
-    <div data-wcp="region:search">
-      <form data-wcp="action:search; effect:async; target:#results">
-        <input type="search" name="q" />
-        <button data-wcp="action:search; effect:async; primary:true">
-          Search
+      <button data-wcp="action:navigate; effect:navigate">
+        Learn More
+      </button>
+    </section>
+
+
+    ### Blog/Article
+    <article data-wcp="region:content">
+      <a href="/article/123" data-wcp="action:navigate; effect:navigate">
+        Read Full Article
+      </a>
+    </article>
+
+    ### Dashboard
+    <div data-wcp="region:navigation">
+      <a href="/dashboard" data-wcp="action:navigate; effect:navigate">Dashboard</a>
+      <a href="/settings" data-wcp="action:navigate; effect:navigate">Settings</a>
+    </div>
+
+    <main data-wcp="region:content">
+      <!-- Main dashboard content -->
+    </main>
+
+    ### Checkout Flow
+    <div data-wcp="region:checkout">
+      <form data-wcp="action:purchase; effect:navigate">
+        <!-- Checkout form fields -->
+        
+        <button type="submit" data-wcp="action:purchase; effect:navigate; primary:true">
+          Complete Purchase
         </button>
       </form>
-      
-      <button data-wcp="action:filter; effect:async; target:#results">
-        Tech Articles
-      </button>
     </div>
+
+    ## Validation Checklist
+
+    Before committing code with WCP:
+
+    - [ ] All buttons have appropriate WCP annotations
+    - [ ] Primary actions are marked with `primary:true`
+    - [ ] Effects accurately describe behavior
+    - [ ] Async operations specify `target:`
+    - [ ] Forms have WCP on both form and submit button
+    - [ ] Navigation elements are grouped in regions
+    - [ ] No duplicate `primary:true` in same section
+
+    ## Registry Integration
+
+    To track adoption, add this meta tag to your site's `<head>`:
+    <meta name="wcp-registry" content="https://registry.wcp.dev/ping">
+
+    This enables optional analytics (domain + version only, no user data).
+
+    ## Resources
+
+    - Full Spec: https://github.com/web-context-protocol/spec
+    - Examples: https://wcp.dev/examples
+    - Validator: https://registry.wcp.dev/validate
+    - Community: https://github.com/orgs/web-context-protocol/discussions
+
+    ---
+
+    **Remember:** WCP is about making AI agents' lives easier. When in doubt, ask: "If an AI agent saw this button, would it know what happens when clicked?" If not, add WCP.
     ```
-  </Accordion>
-  
-  <Accordion title="Modal Triggers" icon="window">
+  </Step>
+  <Step title="Start coding - Cursor will auto-apply WCP">
+    Cursor will now automatically suggest WCP annotations when you create or modify interactive elements. Just accept the suggestions or ask: "Add WCP annotations to this component"
+  </Step>
+</Steps>
+
+## Manual Implementation
+
+If you're not using Cursor, follow these steps:
+
+<Steps>
+  <Step title="Identify primary actions">
+    Find the most important buttons/links on each page:
+    - Checkout button
+    - Add to cart
+    - Form submit
+    - Primary navigation
+  </Step>
+  <Step title="Add WCP attributes">
+    Add `data-wcp` with appropriate action and effect:
     ```html
-    <button data-wcp="action:navigate; effect:modal"
-            onclick="openDetails()">
-      View Details
+    <button data-wcp="action:add; effect:async; primary:true">
+      Add to Cart
     </button>
     ```
-  </Accordion>
-  
-  <Accordion title="Navigation Links" icon="arrow-right">
+  </Step>
+  <Step title="Group in regions">
+    Wrap related elements in semantic regions:
     ```html
-    <nav data-wcp="region:navigation">
-      <a href="/products" 
-         data-wcp="action:navigate; effect:navigate">
-        Products
-      </a>
-    </nav>
+    <div data-wcp="region:product">
+      <!-- Product-related actions -->
+    </div>
     ```
-  </Accordion>
-</AccordionGroup>
+  </Step>
+  <Step title="Validate your implementation">
+    Use the [WCP Validator](https://registry.wcp.dev/validate) to check your syntax.
+  </Step>
+</Steps>
 
-## Best Practices
+## Quick Reference
 
-<CardGroup cols={2}>
-  <Card title="Start with CTAs" icon="bullseye">
-    Annotate primary Call-to-Action buttons first for maximum impact
-  </Card>
-  
-  <Card title="Mark Primary Actions" icon="star">
-    Use `primary:true` for the main action in each section/region
-  </Card>
-  
-  <Card title="Specify Effects" icon="wand-magic-sparkles">
-    Always include effect type so agents know what to expect
-  </Card>
-  
-  <Card title="Use Regions" icon="layer-group">
-    Group related elements with semantic regions
-  </Card>
-</CardGroup>
+### Most Common Patterns
 
-## Optional: Registry Tracking
-
-Track adoption by adding the registry beacon (optional):
-
+**Add to Cart:**
 ```html
-<meta name="wcp-registry" content="https://registry.wcp.dev/ping">
+<button data-wcp="action:add; effect:async; target:#cart; primary:true">
+  Add to Cart
+</button>
 ```
 
-This sends a daily ping (domain + version only, no user data) to help track protocol adoption.
-
-## Validation
-
-Validate your WCP implementation:
-
-```javascript
-// Check all WCP annotations
-document.querySelectorAll('[data-wcp]').forEach(el => {
-  console.log(el.getAttribute('data-wcp'), el);
-});
+**Search:**
+```html
+<form data-wcp="action:search; effect:async; target:#results">
+  <button data-wcp="action:search; effect:async; primary:true">Search</button>
+</form>
 ```
 
-<Tip>
-  Use browser DevTools to inspect and verify your WCP attributes are correctly applied.
-</Tip>
+**Form Submit:**
+```html
+<form data-wcp="action:submit; effect:async; target:#notification">
+  <button type="submit" data-wcp="action:submit; effect:async; primary:true">
+    Save
+  </button>
+</form>
+```
 
-## Next Steps
+**Navigation:**
+```html
+<a href="/page" data-wcp="action:navigate; effect:navigate">
+  Go to Page
+</a>
+```
 
-<CardGroup cols={2}>
-  <Card
-    title="Explore Examples"
-    icon="code"
-    href="/implementation/examples"
-  >
-    See complete implementations for your use case
-  </Card>
-  
-  <Card
-    title="Read Core Concepts"
-    icon="book"
-    href="/concepts/actions"
-  >
-    Deep dive into actions, effects, and regions
-  </Card>
-  
-  <Card
-    title="Best Practices"
-    icon="lightbulb"
-    href="/implementation/best-practices"
-  >
-    Learn advanced patterns and optimization tips
-  </Card>
-  
-  <Card
-    title="Join Community"
-    icon="users"
-    href="https://github.com/orgs/webcontextprotocol/discussions"
-  >
-    Share your implementation and get help
-  </Card>
-</CardGroup>
+## Need Help?
 
-<Warning>
-  **Don't over-annotate!** Start with high-value interactions. You don't need to annotate every single element.
-</Warning>
-
----
-
-<Card
-  title="View Full Specification"
-  icon="file-contract"
-  href="/spec/overview"
-  horizontal
->
-  Need complete technical details? Read the full WCP specification.
-</Card>
+- 📖 [Read the full spec](https://github.com/web-context-protocol/spec)
+- 💬 [Ask in discussions](https://github.com/orgs/web-context-protocol/discussions)
+- 🐛 [Report issues](https://github.com/web-context-protocol/spec/issues)
+- 🔧 [Validate your code](https://registry.wcp.dev/validate)
