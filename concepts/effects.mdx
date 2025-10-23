@@ -1,0 +1,328 @@
+---
+title: "Effects"
+description: "How elements behave when interacted with"
+---
+
+## Overview
+
+**Effects** describe what happens in the browser when an element is activated. They tell AI agents what side effects to expect.
+
+```html
+<button data-wcp="action:add; effect:async">Add to Cart</button>
+```
+
+## Core Effects
+
+### navigate
+
+**Behavior:** Full page reload with URL change
+
+**Use when:**
+- Traditional links
+- Form submissions that reload
+- Page-to-page navigation
+- External links
+
+**Example:**
+```html
+<a href="/products" data-wcp="action:navigate; effect:navigate">
+  Browse Products
+</a>
+
+<form action="/search" data-wcp="action:search; effect:navigate">
+  <input type="search" name="q" />
+  <button type="submit">Search</button>
+</form>
+```
+
+**AI agent expects:**
+- Browser will navigate to new URL
+- Current page will unload
+- Need to wait for new page load
+- Loss of current page state
+
+---
+
+### modal
+
+**Behavior:** Opens an overlay/dialog, page persists underneath
+
+**Use when:**
+- Lightboxes
+- Confirmation dialogs
+- Detail views
+- Popup forms
+
+**Example:**
+```html
+<button data-wcp="action:navigate; effect:modal"
+        onclick="openDetails()">
+  View Details
+</button>
+
+<button data-wcp="action:remove; effect:modal"
+        onclick="confirmDelete()">
+  Delete Account
+</button>
+```
+
+**AI agent expects:**
+- Modal/dialog will appear
+- Page remains loaded underneath
+- May need to interact with modal content
+- May need to close modal afterward
+
+---
+
+### async
+
+**Behavior:** Updates content in-place via AJAX/fetch
+
+**Use when:**
+- Add to cart (updates cart widget)
+- Form submissions (shows success message)
+- Filters (updates results)
+- Live search
+
+**Example:**
+```html
+<button data-wcp="action:add; effect:async; target:#cart-widget">
+  Add to Cart
+</button>
+
+<form data-wcp="action:submit; effect:async; target:#notification">
+  <button type="submit">Save Changes</button>
+</form>
+
+<button data-wcp="action:filter; effect:async; target:#results">
+  Filter by Category
+</button>
+```
+
+**AI agent expects:**
+- No navigation
+- Page content will update
+- Specific target element will change (if `target` specified)
+- Page state preserved
+
+<Tip>
+  Use `target:[selector]` to specify which element will update
+</Tip>
+
+---
+
+### download
+
+**Behavior:** Triggers file download
+
+**Use when:**
+- Export buttons
+- Download links
+- PDF generation
+- Data exports
+
+**Example:**
+```html
+<button data-wcp="action:custom.export; effect:download"
+        onclick="exportData()">
+  Export to CSV
+</button>
+
+<a href="/reports/annual-2024.pdf" 
+   data-wcp="action:navigate; effect:download">
+  Download Report
+</a>
+```
+
+**AI agent expects:**
+- File download will start
+- Page remains loaded
+- Download progress may be monitored
+- File will save to downloads folder
+
+---
+
+### external
+
+**Behavior:** Navigates to external domain
+
+**Use when:**
+- Links to other sites
+- Social media shares
+- External documentation
+- Third-party services
+
+**Example:**
+```html
+<a href="https://github.com/webcontextprotocol" 
+   data-wcp="action:navigate; effect:external">
+  View on GitHub
+</a>
+
+<button data-wcp="action:custom.share; effect:external"
+        onclick="shareOnTwitter()">
+  Share on Twitter
+</button>
+```
+
+**AI agent expects:**
+- Will leave current site
+- May need user confirmation
+- Different domain/origin
+- Potential security considerations
+
+<Warning>
+  AI agents may require explicit user permission before navigating to external sites
+</Warning>
+
+---
+
+## Target Modifier
+
+Specify where async updates will appear:
+
+```html
+<button data-wcp="action:add; effect:async; target:#cart-widget">
+  Add to Cart
+</button>
+
+<div id="cart-widget">
+  <!-- This element will update -->
+</div>
+```
+
+**Benefits:**
+- AI agents know where to look for confirmation
+- Can verify action succeeded
+- Better error handling
+- Improved user feedback
+
+---
+
+## Combining Actions and Effects
+
+<AccordionGroup>
+  <Accordion title="action:add + effect:async" icon="plus">
+    **Most common:** Add to cart, wishlist, playlist
+    ```html
+    <button data-wcp="action:add; effect:async; target:#cart">
+      Add to Cart
+    </button>
+    ```
+  </Accordion>
+  
+  <Accordion title="action:purchase + effect:navigate" icon="credit-card">
+    **Checkout flows:** Navigate to payment page
+    ```html
+    <button data-wcp="action:purchase; effect:navigate">
+      Proceed to Checkout
+    </button>
+    ```
+  </Accordion>
+  
+  <Accordion title="action:submit + effect:async" icon="paper-plane">
+    **Modern forms:** Submit without page reload
+    ```html
+    <form data-wcp="action:submit; effect:async; target:#notification">
+      <button type="submit">Save</button>
+    </form>
+    ```
+  </Accordion>
+  
+  <Accordion title="action:remove + effect:modal" icon="trash">
+    **Confirmations:** Show dialog before deleting
+    ```html
+    <button data-wcp="action:remove; effect:modal">
+      Delete Item
+    </button>
+    ```
+  </Accordion>
+  
+  <Accordion title="action:search + effect:async" icon="magnifying-glass">
+    **Live search:** Update results in-place
+    ```html
+    <form data-wcp="action:search; effect:async; target:#results">
+      <input type="search" />
+      <button type="submit">Search</button>
+    </form>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Decision Tree
+
+<Steps>
+  <Step title="Does it navigate to new page?">
+    Use `effect:navigate`
+  </Step>
+  
+  <Step title="Does it open a modal/dialog?">
+    Use `effect:modal`
+  </Step>
+  
+  <Step title="Does it update content in-place?">
+    Use `effect:async` (+ `target` if specific element)
+  </Step>
+  
+  <Step title="Does it download a file?">
+    Use `effect:download`
+  </Step>
+  
+  <Step title="Does it leave your site?">
+    Use `effect:external`
+  </Step>
+</Steps>
+
+---
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Always Specify Effect" icon="check">
+    Every action should have a corresponding effect
+  </Card>
+  
+  <Card title="Use Target with Async" icon="bullseye">
+    Help agents verify success by specifying update target
+  </Card>
+  
+  <Card title="Match Actual Behavior" icon="equals">
+    Effect must match what actually happens, not what you wish happened
+  </Card>
+  
+  <Card title="Test Edge Cases" icon="flask">
+    Verify behavior with slow connections, errors, etc.
+  </Card>
+</CardGroup>
+
+---
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card
+    title="Learn Actions"
+    icon="bolt"
+    href="/concepts/actions"
+  >
+    What elements do
+  </Card>
+  
+  <Card
+    title="Learn Regions"
+    icon="layer-group"
+    href="/concepts/regions"
+  >
+    Semantic page zones
+  </Card>
+  
+  <Card
+    title="View Examples"
+    icon="code"
+    href="/implementation/examples"
+  >
+    Real-world usage
+  </Card>
+</CardGroup>

@@ -1,97 +1,182 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Web Context Protocol"
+description: "A lightweight HTML annotation standard for AI agents to reliably understand and interact with web pages"
 ---
 
-## Setting up
+## The Problem
 
-Get your documentation site up and running in minutes.
+AI agents are failing 40-60% of web interactions because they're operating blind:
 
 <Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
+<CardGroup cols={3}>
+  <Card title="Action Ambiguity" icon="question">
+    Does clicking navigate away, open a modal, or trigger an async update?
+  </Card>
+  <Card title="Identification Failure" icon="magnifying-glass">
+    Which button is the "checkout" among 15 other buttons on the page?
+  </Card>
+  <Card title="Intent Confusion" icon="brain">
+    "Add to Cart" might be a button, form, or div with onClick handler
+  </Card>
+</CardGroup>
+
+## The Solution
+
+**WCP lets websites tell AI agents exactly what elements do and how they behave.**
+
+```html
+<!-- Before WCP: Generic button, unknown behavior -->
+<button class="btn-primary" onclick="checkout()">
+  Checkout
+</button>
+
+<!-- With WCP: Explicit intent and behavior -->
+<button class="btn-primary" 
+        data-wcp="action:purchase; effect:navigate; primary:true"
+        onclick="checkout()">
+  Checkout
+</button>
+```
+
+<Note>
+  **One attribute. Clear syntax. Predictable behavior.**
+</Note>
+
+## Quick Start
+
+<CardGroup cols={2}>
+  <Card
+    title="5-Minute Quickstart"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Add WCP to your site in minutes
+  </Card>
+  <Card
+    title="Read the Spec"
+    icon="book"
+    href="/spec/overview"
+  >
+    Full technical specification
+  </Card>
+  <Card
+    title="View Examples"
+    icon="code"
+    href="/implementation/examples"
+  >
+    Real-world implementations
+  </Card>
+  <Card
+    title="Join Community"
+    icon="users"
+    href="https://github.com/orgs/webcontextprotocol/discussions"
+  >
+    GitHub Discussions
+  </Card>
+</CardGroup>
+
+## Core Vocabulary
+
+### Actions (What it does)
+
+<ResponseField name="navigate" type="action">
+  Links to new page - menu items, product links
+</ResponseField>
+
+<ResponseField name="submit" type="action">
+  Submits form or data - form submission, data save
+</ResponseField>
+
+<ResponseField name="add" type="action">
+  Adds item to collection - add to cart, add to list
+</ResponseField>
+
+<ResponseField name="purchase" type="action">
+  Initiates payment - checkout, buy now
+</ResponseField>
+
+<ResponseField name="search" type="action">
+  Performs search - search bars, filters
+</ResponseField>
+
+### Effects (How it behaves)
+
+<ResponseField name="navigate" type="effect">
+  Full page load - browser navigation, URL change
+</ResponseField>
+
+<ResponseField name="modal" type="effect">
+  Opens overlay - dialog/modal appears, page persists
+</ResponseField>
+
+<ResponseField name="async" type="effect">
+  Updates in-place - AJAX update, no navigation
+</ResponseField>
+
+<ResponseField name="download" type="effect">
+  File download - triggers file save dialog
+</ResponseField>
+
+## Join the *CP Ecosystem
+
+WCP joins the emerging standard for AI protocol infrastructure:
+
+<CardGroup cols={3}>
+  <Card title="MCP" icon="circle-nodes">
+    Model Context Protocol by Anthropic
+  </Card>
+  <Card title="ACP" icon="credit-card">
+    Agent Communication Protocol by Stripe
+  </Card>
+  <Card title="WCP" icon="globe">
+    Web Context Protocol by Umbrella Mode
+  </Card>
+</CardGroup>
+
+## Why WCP?
+
+<AccordionGroup>
+  <Accordion title="Simple to Adopt" icon="sparkles">
+    One attribute (`data-wcp`), semicolon-separated values. Add it in 5 minutes.
+  </Accordion>
+  
+  <Accordion title="Immediate Benefits" icon="bolt">
+    95%+ success rate for AI agents vs. 40-60% without WCP.
+  </Accordion>
+  
+  <Accordion title="Extensible" icon="puzzle-piece">
+    Custom actions via namespace (`action:custom.your-action`).
+  </Accordion>
+  
+  <Accordion title="Open Source" icon="code-branch">
+    CC0 license. Free to use, extend, and modify without restrictions.
+  </Accordion>
+</AccordionGroup>
+
+## What's Next?
+
+<Steps>
+  <Step title="Understand the Basics">
+    Read [Why WCP?](/why-wcp) to understand the problem and solution
+  </Step>
+  <Step title="Add to Your Site">
+    Follow the [Quickstart Guide](/quickstart) to implement WCP
+  </Step>
+  <Step title="Explore Examples">
+    Browse [real-world examples](/implementation/examples) for your use case
+  </Step>
+  <Step title="Join Community">
+    Share your implementation in [GitHub Discussions](https://github.com/orgs/webcontextprotocol/discussions)
+  </Step>
+</Steps>
+
+---
+
+<Card
+  title="Created by Umbrella Mode"
+  icon="umbrella"
+  href="https://umbrellamode.com"
   horizontal
 >
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
+  Part of the Umbrella Mode AI infrastructure suite: Titan (AI CTO), Nexus (AI Research Director), and WCP
 </Card>

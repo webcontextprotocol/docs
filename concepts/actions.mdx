@@ -1,0 +1,302 @@
+---
+title: "Actions"
+description: "What an element does - the core intent of user interactions"
+---
+
+## Overview
+
+**Actions** describe what happens when a user interacts with an element. They represent the semantic intent, not the technical implementation.
+
+```html
+<button data-wcp="action:add">Add to Cart</button>
+```
+
+## Core Actions
+
+### navigate
+
+**Purpose:** Links to a new page or section
+
+**Use cases:**
+- Menu items
+- Product links
+- Breadcrumbs
+- "Learn More" buttons
+
+**Example:**
+```html
+<a href="/products" data-wcp="action:navigate; effect:navigate">
+  View All Products
+</a>
+```
+
+<Tip>
+  Combine with `effect:navigate` for full page loads or `effect:modal` for in-page navigation
+</Tip>
+
+---
+
+### submit
+
+**Purpose:** Submits form data or saves information
+
+**Use cases:**
+- Form submissions
+- Settings updates
+- Profile changes
+- Data entry
+
+**Example:**
+```html
+<form data-wcp="action:submit; effect:async; target:#notification">
+  <input type="email" name="email" />
+  <button type="submit" 
+          data-wcp="action:submit; effect:async; primary:true">
+    Save Email
+  </button>
+</form>
+```
+
+---
+
+### add
+
+**Purpose:** Adds an item to a collection
+
+**Use cases:**
+- Add to cart
+- Add to wishlist
+- Add to playlist
+- Create new item
+
+**Example:**
+```html
+<button data-wcp="action:add; effect:async; target:#cart">
+  Add to Cart
+</button>
+```
+
+<Note>
+  Usually paired with `effect:async` since adding to a collection typically doesn't navigate away
+</Note>
+
+---
+
+### remove
+
+**Purpose:** Removes an item from a collection
+
+**Use cases:**
+- Remove from cart
+- Delete item
+- Remove from list
+- Unsubscribe
+
+**Example:**
+```html
+<button data-wcp="action:remove; effect:async; target:#cart-items">
+  Remove Item
+</button>
+```
+
+---
+
+### search
+
+**Purpose:** Performs a search or query
+
+**Use cases:**
+- Search bars
+- Query interfaces
+- Lookup tools
+
+**Example:**
+```html
+<form data-wcp="action:search; effect:async; target:#results">
+  <input type="search" name="q" placeholder="Search..." />
+  <button data-wcp="action:search; effect:async; primary:true">
+    Search
+  </button>
+</form>
+```
+
+---
+
+### filter
+
+**Purpose:** Filters or narrows down content
+
+**Use cases:**
+- Category filters
+- Sort options
+- Faceted search
+- Content refinement
+
+**Example:**
+```html
+<button data-wcp="action:filter; effect:async; target:#products"
+        data-category="electronics">
+  Electronics
+</button>
+```
+
+---
+
+### auth
+
+**Purpose:** Authentication-related actions
+
+**Use cases:**
+- Login
+- Signup
+- Logout
+- Password reset
+
+**Example:**
+```html
+<form data-wcp="action:auth; effect:navigate">
+  <input type="email" name="email" />
+  <input type="password" name="password" />
+  <button type="submit" 
+          data-wcp="action:auth; effect:navigate; primary:true">
+    Log In
+  </button>
+</form>
+```
+
+---
+
+### purchase
+
+**Purpose:** Initiates a payment or checkout flow
+
+**Use cases:**
+- Checkout buttons
+- Buy now
+- Payment submission
+- Order placement
+
+**Example:**
+```html
+<button data-wcp="action:purchase; effect:navigate; primary:true">
+  Proceed to Checkout
+</button>
+```
+
+<Warning>
+  Use `action:purchase` for payment initiation. Use `action:submit` for the final payment form submission.
+</Warning>
+
+---
+
+## Custom Actions
+
+For domain-specific workflows, use the `custom.` namespace:
+
+```html
+<!-- SaaS Platform -->
+<button data-wcp="action:custom.deploy; effect:async">
+  Deploy to Production
+</button>
+
+<!-- Healthcare App -->
+<button data-wcp="action:custom.prescribe; effect:modal">
+  Prescribe Medication
+</button>
+
+<!-- Financial Platform -->
+<button data-wcp="action:custom.transfer; effect:modal">
+  Transfer Funds
+</button>
+```
+
+**Namespace convention:**
+```
+action:custom.{your-action-name}
+```
+
+<Tip>
+  Document custom actions in your API or developer documentation for AI agent builders
+</Tip>
+
+---
+
+## Choosing the Right Action
+
+<AccordionGroup>
+  <Accordion title="E-commerce Actions" icon="cart-shopping">
+    - **Product page:** `action:add` (add to cart), `action:purchase` (buy now)
+    - **Cart page:** `action:remove` (remove item), `action:purchase` (checkout)
+    - **Checkout:** `action:submit` (payment form), `action:auth` (sign in)
+  </Accordion>
+  
+  <Accordion title="Content Site Actions" icon="newspaper">
+    - **Search:** `action:search` (search bar)
+    - **Filters:** `action:filter` (categories, tags)
+    - **Navigation:** `action:navigate` (article links, pagination)
+  </Accordion>
+  
+  <Accordion title="SaaS Dashboard Actions" icon="gauge">
+    - **Settings:** `action:submit` (save changes)
+    - **Data actions:** `action:add` (create), `action:remove` (delete)
+    - **Navigation:** `action:navigate` (between sections)
+  </Accordion>
+  
+  <Accordion title="Forms Actions" icon="file-lines">
+    - **Primary submit:** `action:submit; primary:true`
+    - **Cancel:** `action:navigate`
+    - **Delete/Remove:** `action:remove`
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Semantic Actions" icon="tag">
+    Choose actions that describe intent, not implementation. `action:add` not `action:click-button`
+  </Card>
+  
+  <Card title="Combine with Effects" icon="link">
+    Always pair actions with effects to describe complete behavior
+  </Card>
+  
+  <Card title="Mark Primary Actions" icon="star">
+    Use `primary:true` for the main action in each context
+  </Card>
+  
+  <Card title="Custom When Needed" icon="wrench">
+    Use custom namespace for domain-specific actions not covered by core vocabulary
+  </Card>
+</CardGroup>
+
+---
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card
+    title="Learn Effects"
+    icon="wand-magic-sparkles"
+    href="/concepts/effects"
+  >
+    How elements behave
+  </Card>
+  
+  <Card
+    title="Learn Regions"
+    icon="layer-group"
+    href="/concepts/regions"
+  >
+    Semantic page zones
+  </Card>
+  
+  <Card
+    title="View Examples"
+    icon="code"
+    href="/implementation/examples"
+  >
+    Real-world usage
+  </Card>
+</CardGroup>

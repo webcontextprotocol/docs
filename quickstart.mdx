@@ -1,80 +1,217 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Add WCP to your site in 5 minutes"
 ---
 
-## Get started in three steps
+## Get Started in 3 Steps
 
-Get your documentation site running locally and make your first customization.
+Transform your site from guesswork to clarity for AI agents.
 
-### Step 1: Set up your local environment
+<Steps>
+  <Step title="Identify Key Actions">
+    Find the primary user actions on your most important pages:
+    - Add to cart / Buy now
+    - Submit forms
+    - Search queries
+    - Primary navigation
+  </Step>
+  
+  <Step title="Add WCP Annotations">
+    Add `data-wcp` attributes to those elements
+  </Step>
+  
+  <Step title="Test with AI Agents">
+    Verify AI agents can now interact reliably with your site
+  </Step>
+</Steps>
+
+## Example: E-commerce Product Page
+
+### Before WCP
+
+```html
+<div class="product-card">
+  <button class="btn btn-primary" onclick="addToCart()">
+    Add to Cart
+  </button>
+  <button class="btn btn-secondary" onclick="buyNow()">
+    Buy Now
+  </button>
+</div>
+```
+
+**AI agent sees:** Generic buttons with unclear behavior
+
+### After WCP
+
+```html
+<div class="product-card" data-wcp="region:product">
+  <!-- Primary action: Add to cart without navigation -->
+  <button class="btn btn-primary" 
+          data-wcp="action:add; effect:async; target:#cart; primary:true"
+          onclick="addToCart()">
+    Add to Cart
+  </button>
+  
+  <!-- Secondary action: Navigate to checkout -->
+  <button class="btn btn-secondary"
+          data-wcp="action:purchase; effect:navigate"
+          onclick="buyNow()">
+    Buy Now
+  </button>
+</div>
+```
+
+**AI agent knows:**
+- ✅ First button adds to cart without navigation
+- ✅ Second button navigates to checkout
+- ✅ First button is the primary action
+
+## Common Patterns
 
 <AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
+  <Accordion title="Forms with Async Submit" icon="file-lines">
+    ```html
+    <form data-wcp="action:submit; effect:async; target:#notification">
+      <input type="email" name="email" />
+      <button type="submit" 
+              data-wcp="action:submit; effect:async; primary:true">
+        Save Changes
+      </button>
+    </form>
+    ```
   </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
+  
+  <Accordion title="Search with Filters" icon="magnifying-glass">
+    ```html
+    <div data-wcp="region:search">
+      <form data-wcp="action:search; effect:async; target:#results">
+        <input type="search" name="q" />
+        <button data-wcp="action:search; effect:async; primary:true">
+          Search
+        </button>
+      </form>
+      
+      <button data-wcp="action:filter; effect:async; target:#results">
+        Tech Articles
+      </button>
+    </div>
+    ```
+  </Accordion>
+  
+  <Accordion title="Modal Triggers" icon="window">
+    ```html
+    <button data-wcp="action:navigate; effect:modal"
+            onclick="openDetails()">
+      View Details
+    </button>
+    ```
+  </Accordion>
+  
+  <Accordion title="Navigation Links" icon="arrow-right">
+    ```html
+    <nav data-wcp="region:navigation">
+      <a href="/products" 
+         data-wcp="action:navigate; effect:navigate">
+        Products
+      </a>
+    </nav>
+    ```
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+## Best Practices
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Start with CTAs" icon="bullseye">
+    Annotate primary Call-to-Action buttons first for maximum impact
+  </Card>
+  
+  <Card title="Mark Primary Actions" icon="star">
+    Use `primary:true` for the main action in each section/region
+  </Card>
+  
+  <Card title="Specify Effects" icon="wand-magic-sparkles">
+    Always include effect type so agents know what to expect
+  </Card>
+  
+  <Card title="Use Regions" icon="layer-group">
+    Group related elements with semantic regions
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Optional: Registry Tracking
+
+Track adoption by adding the registry beacon (optional):
+
+```html
+<meta name="wcp-registry" content="https://registry.wcp.dev/ping">
+```
+
+This sends a daily ping (domain + version only, no user data) to help track protocol adoption.
+
+## Validation
+
+Validate your WCP implementation:
+
+```javascript
+// Check all WCP annotations
+document.querySelectorAll('[data-wcp]').forEach(el => {
+  console.log(el.getAttribute('data-wcp'), el);
+});
+```
+
+<Tip>
+  Use browser DevTools to inspect and verify your WCP attributes are correctly applied.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Explore Examples"
+    icon="code"
+    href="/implementation/examples"
+  >
+    See complete implementations for your use case
+  </Card>
+  
+  <Card
+    title="Read Core Concepts"
+    icon="book"
+    href="/concepts/actions"
+  >
+    Deep dive into actions, effects, and regions
+  </Card>
+  
+  <Card
+    title="Best Practices"
+    icon="lightbulb"
+    href="/implementation/best-practices"
+  >
+    Learn advanced patterns and optimization tips
+  </Card>
+  
+  <Card
+    title="Join Community"
+    icon="users"
+    href="https://github.com/orgs/webcontextprotocol/discussions"
+  >
+    Share your implementation and get help
+  </Card>
+</CardGroup>
+
+<Warning>
+  **Don't over-annotate!** Start with high-value interactions. You don't need to annotate every single element.
+</Warning>
+
+---
+
+<Card
+  title="View Full Specification"
+  icon="file-contract"
+  href="/spec/overview"
+  horizontal
+>
+  Need complete technical details? Read the full WCP specification.
+</Card>
