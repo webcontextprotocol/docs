@@ -3,11 +3,14 @@
   "theme": "mint",
   "name": "Web Context Protocol",
   "colors": {
-    "primary": "#3B82F6",
-    "light": "#60A5FA",
-    "dark": "#2563EB"
+    "primary": "#2d4dff",
+    "light": "#2d4dff",
+    "dark": "#2d4dff"
   },
   "favicon": "/favicon.svg",
+  "search": {
+    "prompt": "Search..."
+  },
   "navigation": {
     "tabs": [
       {
@@ -40,11 +43,9 @@
         "tab": "Community",
         "groups": [
           {
-            "group": "Contributing",
+            "group": "Get Involved",
             "pages": [
-              "community/contributing",
-              "community/adopters",
-              "community/changelog"
+              "community"
             ]
           }
         ]
@@ -61,11 +62,6 @@
           "anchor": "Registry",
           "href": "https://registry.wcp.dev",
           "icon": "database"
-        },
-        {
-          "anchor": "Umbrella Mode",
-          "href": "https://umbrellamode.com",
-          "icon": "umbrella"
         }
       ]
     }
@@ -77,15 +73,10 @@
   "navbar": {
     "links": [
       {
-        "label": "Examples",
-        "href": "https://github.com/webcontextprotocol/spec/tree/main/examples"
+        "label": "GitHub",
+        "href": "https://github.com/webcontextprotocol"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get Started",
-      "href": "https://docs.wcp.dev/quickstart"
-    }
+    ]
   },
   "contextual": {
     "options": [
@@ -98,7 +89,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/sheevammmm",
+      "x": "https://x.com/umbrellamode",
       "github": "https://github.com/webcontextprotocol"
     }
   },
